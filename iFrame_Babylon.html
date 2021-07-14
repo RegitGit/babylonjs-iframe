@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Babylon.js sample code</title>
+
+        <!-- Babylon.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/ammo.js"></script>
+        <script src="https://preview.babylonjs.com/cannon.js"></script>
+        <script src="https://preview.babylonjs.com/Oimo.js"></script>
+        <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+        <script src="https://preview.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+        <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+        <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+        <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+        <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+                outline: none;
+            }
+        </style>
+    </head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+
+    var models = [null, null, null, null, null];
+    var loaded = false;
+    var loading = false;
+
+    const ROOT_URL = "models/";
+
+    const MODEL_NAMES = [
+        "BoomBox.glb",
+        "BoomBox.glb",
+        "BoomBox.glb",
+        "BoomBox.glb",
+        "BoomBox.glb"
+    ]
+
+    var generator;
+    var sceneGlobal;
+    var progressBar;
+    var progressBarInner;
+    var camera;
+
+    function delayCreateScene() {
+        var scene = new BABYLON.Scene(engine);
+        sceneGlobal = scene;
+
+        scene.createDefaultCameraOrLight(true, true, true);
+        camera = scene.activeCamera;
+        camera.useAutoRotationBehavior = true;
+        camera.alpha = Math.PI * 0.6;
+        camera.beta -= 0.2;
+        camera.wheelPrecision = 750;
+        camera.radius = 0.2;
+        camera.lowerRadiusLimit = 0.05;
+        camera.panningSensibility = 0;
+        toggleCameraSensibiliy(true);
+
+        //Disable keyboard event
+        camera.keysUp = [];
+        camera.keysDown = [];
+        camera.keysLeft = [];
+        camera.keysRight = [];
+
+
+        scene.lights[0].dispose();
+        var light = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(-2, -3, 1), scene);
+        light.position = new BABYLON.Vector3(6, 9, 3);
+        generator = new BABYLON.ShadowGenerator(1024, light);
+        generator.useBlurExponentialShadowMap = true;
+        generator.blurKernel = 32;
+
+        scene.environmentTexture = new BABYLON.CubeTexture("textures/environment.env", scene);
+
+        scene.clearColor = BABYLON.Color3.FromHexString("#F3F3F0");
+        // Basic scene is loaded
+        loaded = true;
+
+        let advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI();
+        progressBar = new BABYLON.GUI.Rectangle();
+        progressBar.width = "200px";
+        progressBar.height = "10px";
+        progressBar.isVisible = false;
+        progressBar.background = "black";
+        advancedTexture.addControl(progressBar);
+
+        progressBarInner = new BABYLON.GUI.Rectangle();
+        //UI_Start.progressBarInner.width = 0;
+        progressBarInner.left = "0px";
+        //UI_Start.progressBarInner.paddingLeft = "4px";
+        progressBarInner.paddingRight = "0px";
+        progressBarInner.height = progressBar.height;
+        progressBarInner.width = "0%";
+        progressBarInner.thickness = 0;
+        progressBarInner.horizontalAlignment = 0;
+        progressBarInner.background = "white";
+        progressBar.addControl(progressBarInner);
+        
+        return scene;   
+    }
+
+    function toggleCameraSensibiliy(turnOn) {
+        camera.angularSensibilityX = turnOn ? 3000 : 9999999;
+        camera.angularSensibilityY = turnOn ? 3000 : 9999999;
+        camera.wheelPrecision = turnOn ? 750 : 9999999;
+    }
+
+
+    var currentActive = -1;
+    var currentImportTask;
+
+    function loadInModel(modelIndex) {
+        currentActive = modelIndex;
+        if (!loaded) {             
+            return;
+        }
+        let loadingIndex = modelIndex;
+        if (loading)
+        {
+            cancelLoading();
+        }
+        if (models[modelIndex] == null) {
+            toggleCameraSensibiliy(false);
+            loading = true;
+            let modelName = MODEL_NAMES[modelIndex]
+            resetGlobalLoadVars();
+            progressBar.isVisible = true;
+            currentImportTask = BABYLON.SceneLoader.ImportMesh("", ROOT_URL, modelName, sceneGlobal, function (meshes) {
+                loading = false;
+                toggleCameraSensibiliy(true);
+                progressBar.isVisible = false;
+                let modelParent = meshes[0];
+                modelParent.name = modelName;
+                models[modelIndex] = modelParent;
+                    
+                // for (var i = 0; i < meshes.length; i++) {
+                //     generator.addShadowCaster(meshes[i]);    
+                // }
+
+                switch (modelIndex) {
+                    case 1:
+                        meshes[1].material.albedoColor = BABYLON.Color3.Red();
+                        break;
+                    case 2:
+                        meshes[1].material.albedoColor = BABYLON.Color3.Blue();
+                        break;
+                    case 3:
+                        meshes[1].material.albedoColor = BABYLON.Color3.Green();
+                        break;
+                    case 4:
+                        meshes[1].material.albedoColor = BABYLON.Color3.Yellow();
+                        break;
+                }
+                activateCorrectModel(modelIndex);
+                
+                // if (loadingIndex != currentActive) {
+                //     loadInModel(currentActive);
+                // }
+            }, 
+            function(eventData) {
+                adjustProgressBar(eventData);
+            });
+        }
+        else {
+            activateCorrectModel(modelIndex);
+        }
+    }
+
+    function cancelLoading() {
+        progressBar.isVisible = false;
+        (currentImportTask)?.onDisposeObservable?.notifyObservers(currentImportTask);
+        loading = false;
+    }
+
+    var prevTotal = 0;
+    var prevLoaded = 0;
+    var accLoaded = 0;
+    var accTotal = 0;
+    var time = 0;
+
+    function adjustProgressBar(evt) {
+        if (!evt.lengthComputable) {
+            return;
+        }
+
+        let loaded = evt.loaded;
+        accLoaded += loaded - prevLoaded;
+        prevLoaded = loaded;
+
+        let total = evt.total;
+        // new section loading
+        if (prevTotal != total) {
+            let leftover = prevTotal - prevLoaded;
+            accLoaded += leftover;
+            accTotal += total;
+            prevTotal = total;
+        }
+        let progressPercentage = (accLoaded / accTotal).toFixed(2);
+        let oneHundred = progressPercentage * 101;
+        time += scene.getEngine().getDeltaTime() * 0.5;
+        time = BABYLON.Scalar.Clamp(time, 0, 1);
+        let lerpedValue = Math.ceil(BABYLON.Scalar.Lerp(0, oneHundred, time));
+        progressBarInner.width = lerpedValue + "%";
+    }
+
+    function resetGlobalLoadVars() {
+        prevTotal = 0;
+        prevLoaded = 0;
+        accLoaded = 0;
+        accTotal = 0;
+        time = 0;
+    }
+
+
+
+
+    function toggleAutoRotate(turnOn) {
+        scene.activeCamera.useAutoRotationBehavior = turnOn;
+    }
+
+
+    function activateCorrectModel(index) {
+        for (let i = 0; i < models.length; i++) {
+            const element = models[i];
+            if (element == null || element == undefined) {
+                continue;
+            }
+            if (index == -1) {
+                element.setEnabled(false);
+                continue;
+            }
+            element.setEnabled(i == index ? true : false);
+        }
+    }
+
+    window.initFunction = async function() {               
+        var asyncEngineCreation = async function() {
+            try {
+            return createDefaultEngine();
+            } catch(e) {
+            console.log("the available createEngine function failed. Creating the default engine instead");
+            return createDefaultEngine();
+            }
+        }
+
+        window.engine = await asyncEngineCreation();
+        if (!engine) throw 'engine should not be null.';
+        window.scene = delayCreateScene();};
+        initFunction().then(() => {sceneToRender = scene        
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>

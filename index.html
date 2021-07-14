@@ -1,1 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
+        <title>Wizard</title>
+
+        <script defer src="fillPage.js"></script>
+        <link rel="stylesheet" href="./css/styles.css">
+    </head>
+<body>
+    <div class="mainviewport shared">
+        <div id="page1" class="shared">
+            <div id="rechteck-1" class="shared gradient-rechteck"></div>
+            <img src="https://www.babylonjs.com/assets/logo-babylonjs-social-twitter.png" alt="Housing" id="click-me" onclick="toggleProductIFrame(true, 0, false, true)">
+        </div>
+       
+        <div id="iframe-product-container" class="iframe-overlay shared" onclick="toggleProductIFrame(false)">
+            <div id="iframe-product-exit-button" class="shared iframe-exit-button" onclick="toggleProductIFrame(false)"></div>
+            <div id="iframe-toggle-housing" class="shared toggle-housing-container" onclick="toggleHousing(event)">
+                <div class="show-housing-text"></div>
+                <div class="toggle-button-container">
+                    <div class="toggle-bg"></div>
+                    <div class="toggle-circle"></div>
+                </div>
+                <div class="show-modul-text"></div>
+            </div>
+            <iframe src="" title="WebGL page" frameBorder="0" id="iframe-product" class="iframe-bounds shared"></iframe>
+            <div id="iframe-info-button" class="shared small-info-button" onclick="toggleInfoIFrame(event)"></div>
+        </div>
+        <div id="iframe-info-container" class="iframe-overlay shared" onclick="toggleInfoIFrame(event)">
+            <div id="iframe-info-exit-button" class="shared iframe-exit-button" onclick="toggleInfoIFrame(event)"></div>
+            <iframe src="" title="Info page" frameBorder="0" id="iframe-info" class="iframe-bounds shared"></iframe>
+        </div>
+    </div>
+    
+
+
+</body>
+</html>

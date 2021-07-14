@@ -1,0 +1,72 @@
+:root {
+
+    /* Colors: */
+    --deep-blue-–-000028: #000028;
+    --siemens-petrol-–-009999: #009999;
+    --light-sand-–-f3f3f0: #F3F3F0;
+    --white-–-ffffff: #FFFFFF;
+    --medium-red-–-ff5454: #FF5454;
+    --dark-red-–-331131: #331131;
+    --bold-green-–-00ffb9-—-active-state: #00FFB9;
+    --bold-blue-–-00e6dc-—-gradient: #00E6DC;
+    --green-–-00af8e-—-gradient: #00AF8E;
+    --blue-–-0087be-—-gradient: #0087BE;
+    --interactive-blue-dark-–-00cccc-—-default-state: #00CCCC;
+    --interactive-blue-dark-–-2ee6e2-—-hover: #2EE6E2;
+    --interctive-blue-dark-4dfff9-—-pressed: #4DFFF9;
+    --light-green-40-–-c5ffef: #C5FFEF;
+    --interactive-coral-55-–-007082: #007082;
+    --interactive-coral-20-–-002949-—-hover-menu: #002949;
+    --interactive-coral-12-–-00183b-—-disabled-state: #00183B;
+    --interactive-coral-8-–-001034: #001034;
+    --deep-blue-30-–-b3b3be-—-border-form: #B3B3BE;
+    --deep-blue-55-–-737389-—-inactive: #737389;
+    --deep-blue-85-262648-—-filled-form: #262648;
+    --deep-blue-70-–-4c4c68-—-border-table-cell: #4C4C68;
+    --teal-–-005159-—-dropdown-active-state: #005159;
+    --bold-green-12-–-001f39-—-active-tag-hover: #001F39;
+    --bright-sand-–-dfdfd9-—-toggle-enabled: #DFDFD9;
+    --deep-blue-20-–-ccccd4-—-hover-toggle: #CCCCD4;
+    --a199fff-—-focus-frame: #199FFF;
+    
+    /* Font/text values */
+    --unnamed-font-family-siemens-sans: 'SiemensSans';
+    --unnamed-font-family-siemenssans-roman: 'SiemensSans-Roman';
+    --unnamed-font-style-normal: normal;
+    --unnamed-font-style-italic: italic;
+    --unnamed-font-weight-900: 900;
+    --unnamed-font-weight-normal: normal;
+    --unnamed-font-size-12: 12px;
+    --unnamed-font-size-14: 14px;
+    --unnamed-font-size-16: 16px;
+    --unnamed-font-size-18: 18px;
+    --unnamed-font-size-20: 20px;
+    --unnamed-font-size-22: 22px;
+    --unnamed-font-size-24: 24px;
+    --unnamed-font-size-32: 32px;
+    --unnamed-font-size-36: 36px;
+    --unnamed-font-size-40: 40px;
+    --unnamed-font-size-48: 48px;
+    --unnamed-font-size-60: 60px;
+    --unnamed-character-spacing-0: 0px;
+    --unnamed-character-spacing-0-02: 0.02px;
+    --unnamed-character-spacing--0-02: -0.02px;
+    --unnamed-character-spacing--0-03: -0.03px;
+    --unnamed-line-spacing-14: 14px;
+    --unnamed-line-spacing-20: 20px;
+    --unnamed-line-spacing-22: 22px;
+    --unnamed-line-spacing-26: 26px;
+    --unnamed-line-spacing-28: 28px;
+    --unnamed-line-spacing-32: 32px;
+    --unnamed-line-spacing-38: 38px;
+    --unnamed-line-spacing-46: 46px;
+    --unnamed-line-spacing-52: 52px;
+    --unnamed-line-spacing-58: 58px;
+    --unnamed-line-spacing-72: 72px;
+    --unnamed-text-transform-uppercase: uppercase;
+
+    /* Eigene */
+    --opacity-fade-duration: 0.3s;
+    --bottom-border-fade-duration: 0.3s;
+    --toggle-fade-duration: 0.2s;
+}
